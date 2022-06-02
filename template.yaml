@@ -9,7 +9,6 @@ Description: >
 Globals:
   Function:
     Timeout: 3
-    Tracing: Active
 
 Resources:
   HelloWorldFunction:
@@ -18,8 +17,6 @@ Resources:
       CodeUri: hello_world/
       Handler: app.lambda_handler
       Runtime: python3.9
-      Architectures:
-        - x86_64
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -38,6 +35,24 @@ Resources:
           Properties:
             Path: /write
             Method: post
+      Policies:
+        - Statement:
+          - Sid: AWSSecretsManagerGetSecretValuePolicy
+            Effect: Allow
+            Action: secretsmanager:GetSecretValue
+            Resource: arn:aws:secretsmanager:ap-northeast-2:351951296352:secret:rds-secret-new-4Zh7Dv
+  BbsListFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: bbs_list/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        BbsList:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /list
+            Method: get
       Policies:
         - Statement:
             - Sid: AWSSecretsManagerGetSecretValuePolicy
